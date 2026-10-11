@@ -9,7 +9,7 @@ export function HeroMobile() {
   return (
     <div className="flex flex-col items-start w-full relative flex-1 min-h-0 justify-between">
       {/* 1 & 2 & 3. Top Text & Buttons Container with deliberate separation */}
-      <div className="flex flex-col items-start w-full shrink-0 pt-6 sm:pt-8">
+      <div className="hero-mobile-text hero-headline-block flex flex-col items-start w-full shrink-0 pt-6 sm:pt-8">
         {/* 1. Main Headline (Bold, editorial scale) */}
         <motion.h1
           initial={{ opacity: 0, y: 12 }}

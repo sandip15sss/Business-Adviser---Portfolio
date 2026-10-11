@@ -1,18 +1,268 @@
 "use client";
 
-import React from "react";
+import React, { useRef } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
 import GlassGrowthIllustration from "@/components/hero/GlassGrowthIllustration";
 import HeroMobile from "@/components/hero/HeroMobile";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useGSAP } from "@gsap/react";
+
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger, useGSAP);
+}
 
 export function Hero() {
+  const heroRef = useRef<HTMLElement>(null);
+
+  useGSAP(
+    () => {
+      if (typeof window === "undefined" || !heroRef.current) return;
+
+      const prefersReducedMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)"
+      ).matches;
+
+      if (prefersReducedMotion) return;
+
+      const mm = gsap.matchMedia();
+
+      // ========================================================
+      // DESKTOP HERO EXIT KINETICS (>= 768px)
+      // As bottom of Hero leaves viewport:
+      // Tablet drifts up (y: -50px), scales down (scale: 0.94), fades (opacity: 0)
+      // Spheres disperse outward (y: -80px, x: ±30px)
+      // Headline & CTAs soft fade out (opacity: 0.15, y: -30px)
+      // ========================================================
+      mm.add("(min-width: 768px)", () => {
+        const animatedTargets = [
+          ".hero-headline-block",
+          ".hero-exit-tablet",
+          ".hero-exit-pedestal",
+          ".hero-exit-satellites",
+          ".hero-exit-sphere-left",
+          ".hero-exit-sphere-top",
+          ".hero-exit-sphere-right",
+          ".hero-exit-sphere-far-right",
+          ".hero-exit-sphere-bottom",
+          ".hero-ambient-glow-top",
+          ".hero-ambient-glow-bottom",
+        ];
+
+        const exitTl = gsap.timeline({
+          scrollTrigger: {
+            trigger: heroRef.current,
+            start: "top top",
+            end: "bottom top",
+            scrub: 0.6,
+            onEnter: () =>
+              gsap.set(animatedTargets, { willChange: "transform, opacity" }),
+            onLeave: () =>
+              gsap.set(animatedTargets, { willChange: "auto" }),
+            onEnterBack: () =>
+              gsap.set(animatedTargets, { willChange: "transform, opacity" }),
+            onLeaveBack: () =>
+              gsap.set(animatedTargets, { willChange: "auto" }),
+          },
+        });
+
+        // 1. Hero Headline & CTAs: Soft fade out (opacity: 0.15, y: -30px)
+        exitTl.to(
+          ".hero-headline-block",
+          {
+            y: -30,
+            opacity: 0.15,
+            ease: "none",
+          },
+          0
+        );
+
+        // 2. 3D Glass Tablet & Growth Bars: Drift upward (y: -50px), scale down (scale: 0.94), fade to 0
+        exitTl.to(
+          ".hero-exit-tablet",
+          {
+            y: -50,
+            scale: 0.94,
+            opacity: 0,
+            ease: "none",
+          },
+          0
+        );
+
+        // Pedestal & Satellite Cards fade and drift with the tablet
+        exitTl.to(
+          [".hero-exit-pedestal", ".hero-exit-satellites"],
+          {
+            y: -40,
+            scale: 0.95,
+            opacity: 0,
+            ease: "none",
+          },
+          0
+        );
+
+        // 3. Hero Floating Spheres: Disperse outward with gentle parallax drift (y: -80px, x: ±30px)
+        exitTl.to(
+          ".hero-exit-sphere-left",
+          {
+            x: -30,
+            y: -80,
+            opacity: 0,
+            ease: "none",
+          },
+          0
+        );
+
+        exitTl.to(
+          ".hero-exit-sphere-top",
+          {
+            x: -18,
+            y: -80,
+            opacity: 0,
+            ease: "none",
+          },
+          0
+        );
+
+        exitTl.to(
+          ".hero-exit-sphere-right",
+          {
+            x: 30,
+            y: -80,
+            opacity: 0,
+            ease: "none",
+          },
+          0
+        );
+
+        exitTl.to(
+          ".hero-exit-sphere-far-right",
+          {
+            x: 35,
+            y: -75,
+            opacity: 0,
+            ease: "none",
+          },
+          0
+        );
+
+        exitTl.to(
+          ".hero-exit-sphere-bottom",
+          {
+            x: -12,
+            y: -60,
+            opacity: 0,
+            ease: "none",
+          },
+          0
+        );
+
+        // Ambient glow subtle vertical drift
+        exitTl.to(
+          ".hero-ambient-glow-top",
+          {
+            y: 70,
+            opacity: 0.15,
+            ease: "none",
+          },
+          0
+        );
+      });
+
+      // ========================================================
+      // MOBILE HERO EXIT KINETICS (< 768px)
+      // 50% reduced translate distances for 60fps safety
+      // ========================================================
+      mm.add("(max-width: 767px)", () => {
+        const animatedTargets = [
+          ".hero-mobile-text",
+          ".hero-exit-tablet",
+          ".hero-exit-pedestal",
+          ".hero-exit-sphere-left",
+          ".hero-exit-sphere-right",
+        ];
+
+        const exitTl = gsap.timeline({
+          scrollTrigger: {
+            trigger: heroRef.current,
+            start: "top top",
+            end: "bottom top",
+            scrub: 0.6,
+            onEnter: () =>
+              gsap.set(animatedTargets, { willChange: "transform, opacity" }),
+            onLeave: () =>
+              gsap.set(animatedTargets, { willChange: "auto" }),
+            onEnterBack: () =>
+              gsap.set(animatedTargets, { willChange: "transform, opacity" }),
+            onLeaveBack: () =>
+              gsap.set(animatedTargets, { willChange: "auto" }),
+          },
+        });
+
+        exitTl
+          .to(
+            ".hero-mobile-text",
+            {
+              y: -15,
+              opacity: 0.2,
+              ease: "none",
+            },
+            0
+          )
+          .to(
+            ".hero-exit-tablet",
+            {
+              y: -25,
+              scale: 0.97,
+              opacity: 0,
+              ease: "none",
+            },
+            0
+          )
+          .to(
+            ".hero-exit-pedestal",
+            {
+              y: -20,
+              opacity: 0,
+              ease: "none",
+            },
+            0
+          )
+          .to(
+            ".hero-exit-sphere-left",
+            {
+              x: -15,
+              y: -40,
+              opacity: 0,
+              ease: "none",
+            },
+            0
+          )
+          .to(
+            ".hero-exit-sphere-right",
+            {
+              x: 15,
+              y: -40,
+              opacity: 0,
+              ease: "none",
+            },
+            0
+          );
+      });
+    },
+    { scope: heroRef }
+  );
+
   return (
-    <section className="min-h-[100dvh] h-[100dvh] md:min-h-screen w-full relative flex flex-col justify-between bg-[#F8F8F5] overflow-hidden px-5 md:px-0 pt-3 md:pt-0 pb-4 md:pb-0">
+    <section
+      ref={heroRef}
+      className="min-h-[100dvh] md:min-h-screen w-full relative flex flex-col justify-between bg-[#F8F8F5] overflow-hidden px-5 md:px-0 pt-3 md:pt-0 pb-8 md:pb-16"
+    >
       {/* Subtle Ambient Background Gradients */}
-      <div className="absolute top-0 right-0 w-[380px] sm:w-[500px] h-[380px] sm:h-[500px] bg-gradient-to-b from-[#EFF3D8]/35 to-transparent rounded-full blur-3xl pointer-events-none -z-10" />
-      <div className="absolute bottom-0 left-0 w-[300px] sm:w-[400px] h-[300px] sm:h-[400px] bg-gradient-to-t from-[#EFF3D8]/25 to-transparent rounded-full blur-3xl pointer-events-none -z-10" />
+      <div className="hero-ambient-glow-top absolute top-0 right-0 w-[380px] sm:w-[500px] h-[380px] sm:h-[500px] bg-gradient-to-b from-[#EFF3D8]/35 to-transparent rounded-full blur-3xl pointer-events-none -z-10" />
+      <div className="hero-ambient-glow-bottom absolute bottom-0 left-0 w-[300px] sm:w-[400px] h-[300px] sm:h-[400px] bg-gradient-to-t from-[#EFF3D8]/25 to-transparent rounded-full blur-3xl pointer-events-none -z-10" />
 
       {/* ========================================================
           1. TOP ZONE (Navbar)
@@ -35,7 +285,7 @@ export function Hero() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          className="flex flex-col items-start justify-center"
+          className="hero-headline-block flex flex-col items-start justify-center"
         >
           {/* Main Headline (Kicker badge completely deleted) */}
           <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-[3.35rem] font-bold text-[#121310] leading-[1.08] tracking-tight mb-4">
@@ -80,18 +330,10 @@ export function Hero() {
           initial={{ opacity: 0, scale: 0.96 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-          className="relative flex items-center justify-center w-full"
+          className="hero-illustration-block relative flex items-center justify-center w-full"
         >
           <GlassGrowthIllustration />
         </motion.div>
-      </div>
-
-      {/* ========================================================
-          4. MINIMALIST BOTTOM FOOTER BAR (Desktop Only)
-          ======================================================== */}
-      <div className="hidden md:flex w-full px-6 md:px-12 py-5 border-t border-[#E3E2DA] flex-row justify-between items-center text-xs text-[#5A5C55] z-10">
-        <span>&copy; 2026 Arhaan Shaikh. All rights reserved.</span>
-        <span className="hidden sm:inline">Founder Advisory &bull; Growth Strategy</span>
       </div>
     </section>
   );
