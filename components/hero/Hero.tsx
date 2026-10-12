@@ -1,99 +1,71 @@
 "use client";
 
 import React from "react";
-import { motion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
 import GlassGrowthIllustration from "@/components/hero/GlassGrowthIllustration";
-import HeroMobile from "@/components/hero/HeroMobile";
 
-export const Hero = React.forwardRef<
-  HTMLElement,
-  React.HTMLAttributes<HTMLElement>
->(function Hero(props, ref) {
+export function Hero() {
   return (
-    <section
-      ref={ref}
-      className="min-h-[100dvh] md:min-h-screen w-full relative flex flex-col justify-between bg-[#F8F8F5] overflow-hidden px-5 md:px-0 pt-3 md:pt-0 pb-8 md:pb-16"
-      {...props}
-    >
-      {/* Subtle Ambient Background Gradients */}
-      <div className="hero-ambient-glow-top absolute top-0 right-0 w-[380px] sm:w-[500px] h-[380px] sm:h-[500px] bg-gradient-to-b from-[#EFF3D8]/35 to-transparent rounded-full blur-3xl pointer-events-none -z-10" />
-      <div className="hero-ambient-glow-bottom absolute bottom-0 left-0 w-[300px] sm:w-[400px] h-[300px] sm:h-[400px] bg-gradient-to-t from-[#EFF3D8]/25 to-transparent rounded-full blur-3xl pointer-events-none -z-10" />
-
-      {/* ========================================================
-          1. TOP ZONE (Navbar)
-          ======================================================== */}
-      <Navbar />
-
-      {/* ========================================================
-          2. MOBILE HERO (< 768px): Strict 100dvh Constrained Layout
-          ======================================================== */}
-      <div className="flex md:hidden flex-1 min-h-0 w-full flex-col justify-between relative z-10">
-        <HeroMobile />
+    <section className="relative w-full h-[100dvh] max-h-[100dvh] flex flex-col justify-between bg-[#F8F8F5] pt-24 pb-8 sm:pb-10 md:pb-12 px-6 sm:px-10 md:px-14 lg:px-20 overflow-hidden">
+      {/* Navigation Clearance / Top Navbar */}
+      <div className="absolute top-0 left-0 w-full z-30">
+        <Navbar />
       </div>
 
-      {/* ========================================================
-          3. DESKTOP HERO (>= 768px): 2-Column Responsive Grid
-          ======================================================== */}
-      <div className="hidden md:grid flex-1 w-full max-w-7xl mx-auto px-6 md:px-12 grid-cols-2 items-center gap-8 md:gap-16 z-10 py-12 relative">
-        {/* Left Column (Text & CTAs) */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          className="hero-headline-block flex flex-col items-start justify-center relative z-10"
-        >
-          {/* Main Headline */}
-          <h1 className="hero-fade-out text-3xl sm:text-4xl lg:text-5xl xl:text-[3.35rem] font-bold text-[#121310] leading-[1.08] tracking-tight mb-4">
-            <span className="block">Turning business</span>
-            <span className="block">problems into</span>
-            <span className="block text-[#CDF225] whitespace-nowrap drop-shadow-[0_2px_12px_rgba(205,242,37,0.35)]">
-              growth strategies.
-            </span>
-          </h1>
+      {/* Ambient Lighting Gradients */}
+      <div className="absolute top-1/4 left-1/4 w-[480px] h-[480px] bg-[#CDF225]/10 rounded-full blur-[140px] pointer-events-none -z-10" />
+      <div className="absolute bottom-10 right-1/4 w-[420px] h-[420px] bg-[#A3E635]/15 rounded-full blur-[120px] pointer-events-none -z-10" />
 
-          {/* Subhead */}
-          <p className="hero-fade-out text-sm sm:text-base text-[#5A5C55] max-w-[460px] leading-relaxed mb-8 font-normal">
-            I help businesses overcome complex challenges, unlock new
-            opportunities, and build practical strategies for sustainable growth.
-          </p>
+      {/* Main Hero Viewport Content */}
+      <div className="max-w-7xl mx-auto w-full flex-1 flex items-center">
+        <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+          {/* LEFT COLUMN: Fluid Typography Scaled for 100vh */}
+          <div className="flex flex-col justify-center w-full lg:col-span-6 z-10">
+            {/* Viewport-Safe Scaled Headline */}
+            <h1 className="text-3xl sm:text-5xl md:text-5xl lg:text-[3.25rem] xl:text-[3.85rem] font-extrabold text-[#121310] leading-[1.08] tracking-tight">
+              Turning business{" "}
+              <span className="block sm:inline">problems into</span>{" "}
+              <span className="text-[#84B800] sm:text-[#CDF225] block sm:inline">
+                growth strategies.
+              </span>
+            </h1>
 
-          {/* CTA Group */}
-          <div className="hero-fade-out flex flex-row items-center gap-4">
-            <motion.a
-              href="#contact"
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.97 }}
-              className="rounded-full bg-[#CDF225] text-[#121310] font-semibold text-xs sm:text-sm px-6 py-3 shadow-[0_4px_16px_rgba(205,242,37,0.35)] hover:shadow-[0_8px_24px_rgba(205,242,37,0.5)] transition-all inline-flex items-center gap-2 cursor-pointer select-none"
-            >
-              <span>Work With Me</span>
-              <ArrowRight className="w-3.5 h-3.5 stroke-[2.2]" />
-            </motion.a>
+            {/* Subheading */}
+            <p className="text-sm sm:text-base md:text-lg text-[#5A5C55] leading-relaxed max-w-lg mt-4 sm:mt-6 mb-6 sm:mb-8 font-normal">
+              I help businesses overcome complex challenges, unlock new
+              opportunities, and build practical strategies for sustainable growth.
+            </p>
 
-            <motion.a
-              href="#case-studies"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="rounded-full bg-white/80 border border-[#DCD9CE] hover:border-[#121310]/30 text-[#121310] font-semibold text-xs sm:text-sm px-6 py-3 shadow-sm hover:shadow transition-all inline-flex items-center justify-center cursor-pointer select-none"
-            >
-              Case Studies
-            </motion.a>
+            {/* CTAs */}
+            <div className="flex flex-wrap items-center gap-3.5 sm:gap-4">
+              <a
+                href="#contact"
+                className="inline-flex items-center gap-2 px-6 sm:px-7 py-3 sm:py-3.5 rounded-full bg-[#CDF225] text-[#121310] font-semibold text-sm sm:text-base transition-transform duration-200 hover:scale-[1.02] active:scale-[0.98] shadow-sm"
+              >
+                Work With Me <span>→</span>
+              </a>
+              <a
+                href="#case-studies"
+                className="inline-flex items-center px-6 sm:px-7 py-3 sm:py-3.5 rounded-full bg-white text-[#121310] font-medium text-sm sm:text-base border border-[#E3E2DA] transition-colors duration-200 hover:bg-[#F0EFE9]"
+              >
+                Case Studies
+              </a>
+            </div>
           </div>
-        </motion.div>
 
-        {/* Right Column (3D Glass Illustration) */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.96 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-          className="hero-illustration-group hero-illustration-block relative flex items-center justify-center w-full z-10"
-        >
-          <GlassGrowthIllustration />
-        </motion.div>
+          {/* RIGHT COLUMN: 3D Growth Dashboard Constrained to Viewport Height */}
+          <div className="relative w-full lg:col-span-6 flex justify-center items-center">
+            <div className="relative w-full max-w-[440px] lg:max-w-[520px] max-h-[52vh] aspect-[4/3] flex items-center justify-center">
+              {/* Existing 3D Glass Tablet / Visual Assets */}
+              <div className="relative w-full h-full flex items-center justify-center max-h-[50vh]">
+                <GlassGrowthIllustration />
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );
-});
+}
 
 export default Hero;
